@@ -15,7 +15,9 @@ public class CountGreaterThanRefundableCommand implements Command {
     }
 
     public Object execute() {
-        return collectionManager.countGreaterThanRefundable(refundable);
+        return collectionManager.getAll().stream()
+                .filter(ticket -> ticket.refundable() == true && refundable == false)
+                .count();
     }
 
     public void setArguments(Map<String, Object> data) throws KeyNotFoundException {

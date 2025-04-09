@@ -86,7 +86,7 @@ public class Cycle {
                 continue;
             }
 
-            dataManager.send(commandData);
+            if(!dataManager.send(commandData)) continue;
             dataManager.processResponse();
         }
     }

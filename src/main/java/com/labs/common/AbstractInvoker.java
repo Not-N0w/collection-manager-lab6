@@ -38,7 +38,7 @@ public abstract class AbstractInvoker {
         try {
             response.add("data", currentCommand.execute());
             response.add("status", "ok");
-            response.add("message", "Сommand executed successfully!");
+            response.add("message", "Command executed successfully!");
         }
         catch(Exception exception) {
             response.add("status", "error");

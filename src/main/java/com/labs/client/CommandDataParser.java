@@ -2,6 +2,7 @@ package com.labs.client;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.labs.common.DataContainer;
@@ -205,7 +206,6 @@ public class CommandDataParser {
     /**
      * Метод парсинга билета
      * 
-     * @param tabs количество табов (для форматирования приглашений к ввода)
      * @return Возвращает введенный билет
      * @see Ticket
      */
@@ -280,7 +280,12 @@ public class CommandDataParser {
         DataContainer result = new DataContainer();
         result.setCommad(command);
         switch (command) {
-            case "add", "add_if_max", "add_if_min", "remove_greater":
+            case "add", "add_if_max", "add_if_min":
+                ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+                tickets.add(skipParseTicket());
+                result.add("tickets", (Object)tickets);
+                break;
+            case "remove_greater":
                 result.add("ticket", skipParseTicket());
                 break;
             case "remove_by_id":

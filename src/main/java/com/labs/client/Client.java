@@ -59,7 +59,7 @@ public class Client {
     public void run() {
         fileManager.makeValidCollectionFile();
         ArrayList<Ticket> collectionFileData = fileManager.getTickets();
-        dataManager.sendCommand("addSome", new Pair<String,Object>("tickets", collectionFileData));
+        dataManager.sendCommand("add", new Pair<String,Object>("tickets", collectionFileData));
         dataManager.processResponse();
         cycle.cycle();
     }

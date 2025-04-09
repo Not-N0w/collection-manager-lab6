@@ -55,7 +55,6 @@ public class DataManager {
             request.request(serialized);
         } catch (IOException exception) {
             output.outError("Serialization error");
-            output.outError("Try again\n");
             return false;
         }
         return true;
@@ -111,10 +110,8 @@ public class DataManager {
             output.responseOut(commandResponse);
         } catch (IOException exception) {
             output.outError("Response derialization error (IO).");
-            output.outError("Try again\n");
         } catch (ClassNotFoundException exception) {
             output.outError("Response derialization error. Invalid class.");
-            output.outError("Try again\n");
         }
     }
 }

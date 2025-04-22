@@ -34,6 +34,8 @@ public class CommandManager {
             return null;
         invoker.run(dataContainer);
 
-        return invoker.getResponse();
+        var response = invoker.getResponse();
+        response.add("from", "CLIENT");
+        return response;
     }
 }

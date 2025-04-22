@@ -1,7 +1,12 @@
 package com.labs.client;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import com.labs.client.extra.Pair;
+import com.labs.common.DataContainer;
 import com.labs.common.core.Ticket;
 
 /**
@@ -32,7 +37,7 @@ public class Client {
      * Полу с экземпляром главного цикла.
      */
     private Cycle cycle;
-
+    private Transmitter transmitter;
     /** 
     * Конструктор - создание нового объекта.
     * @see Client#Client(String)
@@ -48,19 +53,24 @@ public class Client {
         output = new Output();
         input = new Input(output);
         fileManager = new FileManager(input, output, filePath);
-        dataManager = new DataManager(output);
+        transmitter = new Transmitter();
+        dataManager = new DataManager(output, transmitter);
         cycle = new Cycle(input,output,fileManager,dataManager);
     }
-    
+
+
     /**
-     * Метод, осуществляющий валидацию файла коллекции, отправку этих данных на сервер, зпуск главного цикла.
+     * Метод, осуществляющий валидацию файла коллекции, отправку этих данных на сервер, запуск главного цикла.
      */
     @SuppressWarnings("unchecked")
     public void run() {
-        fileManager.makeValidCollectionFile();
-        ArrayList<Ticket> collectionFileData = fileManager.getTickets();
-        dataManager.sendCommand("add", new Pair<String,Object>("tickets", collectionFileData));
-        dataManager.processResponse();
+        DataContainer response = transmitter.connect();
+        output.responseOut(response);
         cycle.cycle();
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.run();
     }
 }

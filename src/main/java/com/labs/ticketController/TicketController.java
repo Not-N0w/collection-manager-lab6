@@ -32,28 +32,36 @@ public class TicketController {
      * 
      * @param inData данные с клиента в байтовом представлении
      */
-    public void process(byte[] inData) {
+    public byte[] process(byte[] inData) {
         DataContainer data = null;
         DataContainer commandResponse = new DataContainer();
+        commandResponse.add("from", "SERVER");
+
+        boolean skipExecution = false;
         try {
             data = Deserializer.deserialize(inData);
         } catch (IOException exception) {
             commandResponse.add("status", "error");
             commandResponse.add("message", "Deserialization error (IO).");
+            skipExecution = true;
+
         } catch (ClassNotFoundException exception) {
             commandResponse.add("status", "error");
             commandResponse.add("message", "Deserialization error. Invalid class.");
+            skipExecution = true;
         }
-
-        invoker.run(data);
-        commandResponse = invoker.getResponse();
+        if(!skipExecution) {
+            invoker.run(data);
+            commandResponse = invoker.getResponse();
+        }
 
         byte[] outData;
         try {
             outData = Serializer.serialize(commandResponse);
-            response.setResponse(outData);
+            return outData;
         } catch (IOException exception) {
             // idk mb try again or sth else
         }
+        return null;
     }
 }

@@ -142,32 +142,8 @@ public class Output {
         out(makeError(in));
     }
 
-    /**
-     * Метод, форматирующий и выводящий ответ с сервера {@link DataContainer}
-     * 
-     * @param response ответ с сервера
-     * @see DataContainer
-     */
-    public void responseOut(DataContainer response) {
-        if (response == null)
-            return;
-        if (((String) response.get("status")).equals("error")) {
-            out(makeError((String) response.get("message")));
-            out("\n");
-            return;
-        }
-        if (response.getCommand().equals("addSome")) {
-            out(makeOk("Data succsessfully loaded!"));
-            out("\n");
-            return;
-        }
-        out(makeOk((String) response.get("message")));
-
+    private void processData(DataContainer response) {
         Object responseData = response.get("data");
-        if (responseData == null) {
-            out("\n");
-            return;
-        }
 
         String content = "";
         if (responseData instanceof ArrayList<?>) {
@@ -187,14 +163,43 @@ public class Output {
             content = text;
         }
 
-        String command = response.getCommand();
-        lengthWithoutColor = command.length() + 10;
-        out(makeBlock(content, ANSI_PURPLE + response.getCommand() + " -> " + "OUTPUT" + ANSI_RESET));
-        out("\n");
+            String command = response.getCommand();
+            lengthWithoutColor = command.length() + 10;
+            out(makeBlock(content, ANSI_PURPLE + response.getCommand() + " -> " + "OUTPUT" + ANSI_RESET));
 
+    }
+    /**
+     * Метод, форматирующий и выводящий ответ с сервера {@link DataContainer}
+     * 
+     * @param response ответ с сервера
+     * @see DataContainer
+     */
+    public void responseOut(DataContainer response) {
+        if (response == null)
+            return;
+        else if(response.get("status").equals("error")) {
+            out(makeError((String) response.get("message")));
+        }
+        else if (response.get("status").equals("ok")) {
+            out(makeOk((String) response.get("message")));
+        }
+
+        if (response.get("data") == null) return;
+        processData(response);
     }
 
     public static String getColoredString(String in, String color) {
         return colors.get(color) + in + ANSI_RESET;
     }
 }
+
+
+/*
+*
+* DC :
+* server_command_response
+*
+*
+*
+*
+* */

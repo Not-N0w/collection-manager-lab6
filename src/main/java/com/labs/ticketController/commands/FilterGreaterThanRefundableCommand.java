@@ -2,6 +2,7 @@ package com.labs.ticketController.commands;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.labs.common.Command;
 import com.labs.common.core.Ticket;
@@ -18,13 +19,16 @@ public class FilterGreaterThanRefundableCommand implements Command {
 
     public Object execute() {
         return collectionManager.getAll().stream()
-                .filter(ticket -> (ticket.refundable() == true && refundable == false))
-                .sorted(Comparator.comparing(Ticket::name));
+                .filter(ticket -> Boolean.compare(ticket.refundable(), refundable) > 0)
+                .sorted(Comparator.comparing(Ticket::name))
+                .collect(Collectors.toList());
     }
 
     public void setArguments(Map<String, Object> data) throws KeyNotFoundException {
-        if(!data.containsKey("refundable")) { throw new KeyNotFoundException("refundable"); }
-        this.refundable = (Boolean)data.get("refundable");
+        if (!data.containsKey("refundable")) {
+            throw new KeyNotFoundException("refundable");
+        }
+        this.refundable = (Boolean) data.get("refundable");
     }
 }
 

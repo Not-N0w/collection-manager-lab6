@@ -28,16 +28,17 @@ public class DataManager {
      * Поле с классом, отвечающим за вывод данных.
     */
     private Output output;
-
+    private Transmitter transmitter;
     /**
      * Конструктор - создание нового объекта.
      * 
      * @param output класс вывода данных
      */
-    public DataManager(Output output) {
+    public DataManager(Output output, Transmitter transmitter) {
         request = new Request();
         response = Response.getInstance();
         this.output = output;
+        this.transmitter = transmitter;
     }
 
     /**
@@ -49,14 +50,13 @@ public class DataManager {
      * @see DataContainer
      */
     public boolean send(DataContainer commandData) {
-        byte[] serialized;
-        try {
-            serialized = Serializer.serialize(commandData);
-            request.request(serialized);
-        } catch (IOException exception) {
-            output.outError("Serialization error");
-            return false;
+        var connCheck = transmitter.connectionCheck();
+        if(connCheck != null) {
+            output.responseOut(connCheck);
         }
+        DataContainer response = transmitter.send(commandData);
+        output.responseOut(response);
+        if(response.get("error") != null) return false;
         return true;
     }
 
@@ -83,19 +83,8 @@ public class DataManager {
      * @see DataContainer
      */
     public DataContainer getResponse() {
-        DataContainer commandResponse;
-        try {
-            commandResponse = Deserializer.deserialize(response.getResponse());
-            return commandResponse;
-        } catch (IOException exception) {
-            output.outError("Response derialization error (IO).");
-            output.outError("Try again\n");
-            return null;
-        } catch (ClassNotFoundException exception) {
-            output.outError("Response derialization error. Invalid class.");
-            output.outError("Try again\n");
-            return null;
-        }
+        DataContainer commandResponse = transmitter.getResponse();
+        return commandResponse;
     }
 
     /**
@@ -104,14 +93,6 @@ public class DataManager {
      * @see DataContainer
      */
     public void processResponse() {
-        DataContainer commandResponse;
-        try {
-            commandResponse = Deserializer.deserialize(response.getResponse());
-            output.responseOut(commandResponse);
-        } catch (IOException exception) {
-            output.outError("Response derialization error (IO).");
-        } catch (ClassNotFoundException exception) {
-            output.outError("Response derialization error. Invalid class.");
-        }
+        output.responseOut(getResponse());
     }
 }

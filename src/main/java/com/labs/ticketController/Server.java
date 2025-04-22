@@ -1,5 +1,8 @@
 package com.labs.ticketController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -9,6 +12,7 @@ import java.util.Set;
 public class Server {
     private TicketController ticketController;
     int port = 8080;
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
     public Server() {
         ticketController = new TicketController();
@@ -40,7 +44,7 @@ public class Server {
             socketChannel.configureBlocking(false);
             Attachment attachment = new Attachment(Attachment.State.LENGTH_STATE, ByteBuffer.allocate(4));
             socketChannel.register(key.selector(), SelectionKey.OP_READ, attachment);
-            System.out.println("Accepted connection from " + socketChannel.getRemoteAddress());
+            logger.info("Accepted connection from " + socketChannel.getRemoteAddress());
         }
     }
 
@@ -72,6 +76,7 @@ public class Server {
                     return;
                 }
                 if(!attachment.dataBuffer.hasRemaining()) {
+                    logger.info("Received data from " + socketChannel.getRemoteAddress());
                     attachment.dataBuffer.flip();
                     byte[] data = attachment.dataBuffer.array();
                     byte[] response = ticketController.process(data);
@@ -83,7 +88,6 @@ public class Server {
                     key.interestOps(SelectionKey.OP_WRITE);
 
                 }
-                System.out.println("Received data from " + socketChannel.getRemoteAddress());
             }
 
         } catch (IOException e) {
@@ -91,7 +95,7 @@ public class Server {
                 socketChannel.close();
             } catch (IOException ignored) {}
             key.cancel();
-            System.out.println("Client disconnected (read): " + e.getMessage());
+            logger.info("Client disconnected (read): " + e.getMessage());
         }
     }
 
@@ -105,13 +109,14 @@ public class Server {
                 Attachment attachment = new Attachment(Attachment.State.LENGTH_STATE, ByteBuffer.allocate(4));
                 key.attach(attachment);
                 key.interestOps(SelectionKey.OP_READ);
+                logger.info("Response sent to " + socketChannel.getRemoteAddress());
             }
         } catch (IOException e) {
             try {
                 socketChannel.close();
             } catch (IOException ignored) {}
             key.cancel();
-            System.out.println("Client disconnected (write): " + e.getMessage());
+            logger.info("Client disconnected (write): " + e.getMessage());
         }
     }
 
@@ -121,7 +126,7 @@ public class Server {
         server.bind(new InetSocketAddress("localhost", port));
         server.configureBlocking(false);
         server.register(selector, SelectionKey.OP_ACCEPT);
-        System.out.println("Server started on port " + port);
+        logger.info("Server started on port " + port);
 
         while (true) {
             selector.select();
@@ -141,13 +146,13 @@ public class Server {
                         doWrite(key);
                     }
                 } catch (CancelledKeyException e) {
-                    System.out.println("Cancelled key encountered: " + e.getMessage());
+                    logger.error("Cancelled key encountered: " + e.getMessage());
                 } catch (IOException e) {
                     key.cancel();
                     try {
                         key.channel().close();
                     } catch (IOException ignored) {}
-                    System.out.println("Exception while handling key: " + e.getMessage());
+                    logger.error("Exception while handling key: " + e.getMessage());
                 }
             }
         }

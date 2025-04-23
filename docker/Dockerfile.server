@@ -1,0 +1,6 @@
+FROM eclipse-temurin:24-jdk
+EXPOSE 8000
+
+WORKDIR /app
+COPY server/build/libs/server.jar server.jar
+ENTRYPOINT ["java", "-jar", "server.jar"]

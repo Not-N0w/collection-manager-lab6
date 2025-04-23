@@ -1,0 +1,35 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+    container_name: client
+    stdin_open: true
+    tty: true
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - appnet
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    container_name: server
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: [ "CMD", "pgrep", "java" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - appnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  appnet:
+    driver: bridge

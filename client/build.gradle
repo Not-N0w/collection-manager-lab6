@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation project(':common')
-    implementation 'com.google.code.gson:gson:2.11.0'
 }
 
 application {
@@ -30,3 +29,5 @@ task buildJar(type: Jar) {
     from sourceSets.main.output
     dependsOn build
 }
+sourceCompatibility = '17'
+targetCompatibility = '17'

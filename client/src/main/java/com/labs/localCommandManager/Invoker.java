@@ -2,10 +2,10 @@ package com.labs.client.localCommandManager;
 
 import com.labs.client.Cycle;
 import com.labs.client.DataManager;
-import com.labs.client.FileManager;
 import com.labs.client.localCommandManager.commands.ExecuteScriptCommand;
 import com.labs.client.localCommandManager.commands.ExitCommand;
 import com.labs.client.localCommandManager.commands.HelpCommand;
+import com.labs.client.localCommandManager.commands.ConnInfoCommand;
 import com.labs.common.AbstractInvoker;
 
 /**
@@ -19,13 +19,13 @@ public class Invoker extends AbstractInvoker {
      * {@link AbstractInvoker}
      * 
      * @param cycle       цикл, в котором сейчас находится программа
-     * @param fileManager класс работы с файлами
      * @param dataManager класс обработки данных
      */
-    public Invoker(Cycle cycle, FileManager fileManager, DataManager dataManager) {
+    public Invoker(Cycle cycle, DataManager dataManager) {
         commands.put("help", new HelpCommand());
         commands.put("exit", new ExitCommand(cycle));
         commands.put("execute_script", new ExecuteScriptCommand(cycle));
+        commands.put("conninfo", new ConnInfoCommand(dataManager));
     }
 
     /**

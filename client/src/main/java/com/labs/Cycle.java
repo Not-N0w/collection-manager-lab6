@@ -24,11 +24,6 @@ public class Cycle {
     */
     private Output output;
 
-    /**
-     * Поле с классом, отвечающим за работу с файлами.
-    */
-    private FileManager fileManager;
-
     /** 
      * Поле с классом, отвечающим за обработку данных. 
     */
@@ -44,14 +39,12 @@ public class Cycle {
      * 
      * @param input       класс ввода данных
      * @param output      класс вывода данных
-     * @param fileManager класс работы с файлами
      * @param dataManager класс обработки данных
      */
-    public Cycle(Input input, Output output, FileManager fileManager, DataManager dataManager) {
-        localCommandManager = new CommandManager(this, fileManager, dataManager);
+    public Cycle(Input input, Output output, DataManager dataManager) {
+        localCommandManager = new CommandManager(this, dataManager);
         this.input = input;
         this.output = output;
-        this.fileManager = fileManager;
         this.dataManager = dataManager;
     }
 
@@ -89,13 +82,6 @@ public class Cycle {
             if(!dataManager.send(commandData)) continue;
             dataManager.processResponse();
         }
-    }
-
-    /**
-     * @return FileManager
-     */
-    public FileManager fileManager() {
-        return this.fileManager;
     }
 
     /**

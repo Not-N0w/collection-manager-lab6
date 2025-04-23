@@ -21,15 +21,7 @@ import java.util.Scanner;
  * Класс обрабатывающий файлы 
 */
 public class FileManager {
-    /** 
-     * Поле с классом, отвечающим за получение данных от пользователя. 
-    */
-    private Input input;
 
-    /** 
-     * Поле с классом, отвечающим за вывод данных. 
-    */
-    private Output output;
 
     /**
      * Путь к файлу коллекции, который хранит сохраненные объекты коллекции в JSON
@@ -43,32 +35,8 @@ public class FileManager {
      * @param output             класс вывода данных
      * @param collectionFilePath путь к файлу коллекции
      */
-    public FileManager(Input input, Output output, String collectionFilePath) {
-        this.input = input;
-        this.output = output;
+    public FileManager(String collectionFilePath) {
         this.collectionFilePath = collectionFilePath;
-    }
-
-    /**
-     * Метод, создающий валидный путь к файлу коллекции (обращаясь к {@link input}
-     * для общения с пользователем)
-     */
-    public void makeValidCollectionFile() {
-        String filePath = "";
-        try {
-            filePath = input.makeCollectionFile();
-            collectionFilePath = filePath;
-        } catch (Exception exception) {
-            output.fileNotExistMessage(exception.getMessage());
-            makeValidCollectionFile();
-        }
-    }
-
-    /**
-     * @return путь к файлу коллеции
-     */
-    public String filePath() {
-        return collectionFilePath;
     }
 
     /**
@@ -117,7 +85,7 @@ public class FileManager {
         try (FileWriter writer = new FileWriter(collectionFilePath)) {
             writer.write(toFile);
         } catch (IOException e) {
-            output.outError("Error writing to file " + e.getMessage());
+            // logg
         }
     }
 

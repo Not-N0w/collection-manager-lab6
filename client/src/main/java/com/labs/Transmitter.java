@@ -17,7 +17,9 @@ public class Transmitter {
     private final Serializer serializer;
 
     public Transmitter() {
-        this.socketAddress = new InetSocketAddress("host.docker.internal", 8000);
+        this.socketAddress = new InetSocketAddress(
+                "localhost", 1804
+        );
         this.serializer = new Serializer();
     }
 
@@ -120,4 +122,25 @@ public class Transmitter {
         response.add("message", "Data sent successfully");
         return response;
     }
+    public String connInfo() {
+            if (socketChannel == null) {
+                return "SocketChannel is not initialized.";
+            }
+
+            if (!socketChannel.isOpen()) {
+                return "Connection is closed.";
+            }
+
+            try {
+                if (socketChannel.isConnected()) {
+                    return "Connection is established with " + socketChannel.getRemoteAddress();
+                } else if (socketChannel.isConnectionPending()) {
+                    return "Connection is in progress...";
+                } else {
+                    return "Connection is not established.";
+                }
+            } catch (IOException e) {
+                return "Error retrieving connection status: " + e.getMessage();
+            }
+        }
 }

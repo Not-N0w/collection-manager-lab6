@@ -37,7 +37,7 @@ public class ExecuteScriptCommand implements Command {
         Input input = new Input(cycle.output(), filePath);
         if (!input.checkScanner())
             return null;
-        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.fileManager(), cycle.dataManager());
+        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager());
         fileCycle.output().noComments();
         fileCycle.input().noComments();
 

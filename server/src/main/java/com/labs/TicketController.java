@@ -1,8 +1,10 @@
 package com.labs.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.labs.common.DataContainer;
+import com.labs.common.core.Ticket;
 import com.labs.common.dataConverter.Deserializer;
 import com.labs.common.dataConverter.Serializer;
 
@@ -15,14 +17,26 @@ public class TicketController {
      * Вызыватель команды
      */
     private Invoker invoker;
-
+    private com.labs.client.FileManager fileManager;
     /**
      * Конструктор - создание нового объекта.
      */
     public TicketController() {
+        fileManager = new com.labs.client.FileManager("/server/saved_dir/saved");
         invoker = new Invoker();
     }
 
+    public void loadTickets() {
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setCommad("add");
+        dataContainer.add("tickets", fileManager.getTickets());
+        invoker.run(dataContainer);
+    }
+    public void saveTickets() {
+        invoker.run(new DataContainer("show"));
+        ArrayList<Ticket> resp = (ArrayList<Ticket>) invoker.getResponse().get("data");
+        fileManager.saveTickets(resp);
+    }
     /**
      * Обработка данных
      * 

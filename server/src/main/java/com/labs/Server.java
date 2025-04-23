@@ -10,12 +10,12 @@ import java.nio.channels.*;
 import java.util.Set;
 
 public class Server {
-    private TicketController ticketController;
-    int port = 8000;
+    private com.labs.server.TicketController ticketController;
+    int port = 1804;
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
-
     public Server() {
-        ticketController = new TicketController();
+
+        ticketController = new com.labs.server.TicketController();
     }
 
     static class Attachment {
@@ -80,6 +80,8 @@ public class Server {
                     attachment.dataBuffer.flip();
                     byte[] data = attachment.dataBuffer.array();
                     byte[] response = ticketController.process(data);
+                    ticketController.saveTickets();
+                    logger.info("tickets saved.");
                     ByteBuffer responseBuffer = ByteBuffer.allocate(4 + response.length);
                     responseBuffer.putInt(response.length);
                     responseBuffer.put(response);
@@ -159,6 +161,8 @@ public class Server {
     }
 
     public void start() {
+        ticketController.loadTickets();
+        logger.info("Tickets loaded");
         try {
             run();
         } catch (Exception e) {

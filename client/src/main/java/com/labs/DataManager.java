@@ -27,7 +27,9 @@ public class DataManager {
         this.output = output;
         this.transmitter = transmitter;
     }
-
+    public String connInfo() {
+        return transmitter.connInfo();
+    }
     /**
      * Метод, сериализующий данные и отправляющий их на сервер
      * 

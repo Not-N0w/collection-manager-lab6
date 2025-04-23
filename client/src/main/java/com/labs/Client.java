@@ -24,10 +24,6 @@ public class Client {
     */
     private Output output;
 
-    /**
-     * Поле с классом, отвечающим за работу с файлами.
-    */
-    private FileManager fileManager;
 
     /**
      * Поле с классом, отвечающим за обработку данных.
@@ -39,24 +35,13 @@ public class Client {
      */
     private Cycle cycle;
     private Transmitter transmitter;
-    /** 
-    * Конструктор - создание нового объекта.
-    * @see Client#Client(String)
-    */
+
     public Client() {
-        this("");
-    }
-    /** 
-    * Конструктор - создание нового объекта с определенным filePath.
-    * @see Client#Client()
-    */
-    public Client(String filePath) {
         output = new Output();
         input = new Input(output);
-        fileManager = new FileManager(input, output, filePath);
         transmitter = new Transmitter();
         dataManager = new DataManager(output, transmitter);
-        cycle = new Cycle(input,output,fileManager,dataManager);
+        cycle = new Cycle(input,output,dataManager);
     }
 
 

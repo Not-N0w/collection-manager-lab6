@@ -17,12 +17,12 @@ public class TicketController {
      * Вызыватель команды
      */
     private Invoker invoker;
-    private com.labs.client.FileManager fileManager;
+    private FileManager fileManager;
     /**
      * Конструктор - создание нового объекта.
      */
     public TicketController() {
-        fileManager = new com.labs.client.FileManager("/server/saved_dir/saved");
+        fileManager = new FileManager("/server/saved_dir/saved");
         invoker = new Invoker();
     }
 

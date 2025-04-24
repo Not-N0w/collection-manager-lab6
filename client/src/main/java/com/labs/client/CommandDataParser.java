@@ -249,7 +249,7 @@ public class CommandDataParser {
      * 
      * @return Возвращает введенный путь к файлу
      */
-    private String parsePath() {
+    private String parseString() {
         String result;
         result = scannerGet("ScriptPath", String.class);
         return result;
@@ -292,7 +292,15 @@ public class CommandDataParser {
                 result.add("id", parseID());
                 break;
             case "execute_script":
-                result.add("path", parsePath());
+                String str = parseString();
+                if(str.charAt(0) == '-' && str.length() == 2) {
+                    if("s".contains(str.substring(1))) {
+                        result.add("param", str.substring(1));
+                        result.add("path", parseString());
+                        break;
+                    }
+                }
+                result.add("path", str);
                 break;
             case "count_greater_than_refundable", "filter_greater_than_refundable":
                 result.add("refundable", parseRefundable());

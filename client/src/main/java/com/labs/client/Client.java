@@ -1,13 +1,6 @@
 package com.labs.client;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import com.labs.client.extra.Pair;
 import com.labs.common.DataContainer;
-import com.labs.common.core.Ticket;
 
 
 /**
@@ -41,7 +34,7 @@ public class Client {
         input = new Input(output);
         transmitter = new Transmitter();
         dataManager = new DataManager(output, transmitter);
-        cycle = new Cycle(input,output,dataManager);
+        cycle = new Cycle(input,output,dataManager, false);
     }
 
 

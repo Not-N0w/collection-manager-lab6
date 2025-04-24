@@ -12,16 +12,14 @@ import java.nio.channels.SocketChannel;
 
 public class Transmitter {
 
-    private final SocketAddress socketAddress;
+    private SocketAddress socketAddress;
     private SocketChannel socketChannel;
     private final Serializer serializer;
 
     public Transmitter() {
-        this.socketAddress = new InetSocketAddress(
-                "localhost", 1804
-        );
         this.serializer = new Serializer();
     }
+
 
     DataContainer connectionCheck() {
         if (socketChannel == null || !socketChannel.isConnected()) {
@@ -34,13 +32,25 @@ public class Transmitter {
 
     DataContainer connect() {
         DataContainer response = new DataContainer();
+        try {
+            this.socketAddress = new InetSocketAddress(
+                    System.getenv("TO_HOST"),
+                    Integer.parseInt(System.getenv("TO_PORT"))
+            );
+        }
+        catch (Exception e) {
+            response.add("from", "CLIENT");
+            response.add("status", "error");
+            response.add("message", "Environment variable TO_HOST or TO_PORT are not set");
+            return response;
+        }
         response.add("from", "SERVER");
         try {
             socketChannel = SocketChannel.open();
             socketChannel.connect(socketAddress);
         } catch (Exception e) {
             response.add("status", "error");
-            response.add("message", e.getMessage());
+            response.add("message", "Connect failed");
             return response;
         }
         response.add("status", "ok");

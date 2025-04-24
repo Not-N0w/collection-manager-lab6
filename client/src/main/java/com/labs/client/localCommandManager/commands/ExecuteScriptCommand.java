@@ -19,7 +19,7 @@ public class ExecuteScriptCommand implements Command {
      * Поле - текущий цикл
     */
     private Cycle cycle;
-
+    String param;
     /**
      * Конструктор - создание нового объекта.
      * 
@@ -37,7 +37,10 @@ public class ExecuteScriptCommand implements Command {
         Input input = new Input(cycle.output(), filePath);
         if (!input.checkScanner())
             return null;
-        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager());
+        boolean isScilent = false;
+        if(param != null && param.equals("s")) isScilent = true;
+
+        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager(), isScilent);
         fileCycle.output().noComments();
         fileCycle.input().noComments();
 
@@ -56,6 +59,9 @@ public class ExecuteScriptCommand implements Command {
     public void setArguments(Map<String, Object> data) throws KeyNotFoundException {
         if (!data.containsKey("path")) {
             throw new KeyNotFoundException("path");
+        }
+        if(data.containsKey("param")) {
+            param = (String) data.get("param");
         }
         this.filePath = (String) data.get("path");
     }

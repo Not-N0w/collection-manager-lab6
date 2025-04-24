@@ -33,7 +33,7 @@ public class Cycle {
      * Флаг, указывающий на необходимость выхода из цикла 
     */
     private boolean needLeave = false;
-
+    private boolean isScilent = false;
     /**
      * Конструктор создание нового объекта.
      * 
@@ -41,11 +41,12 @@ public class Cycle {
      * @param output      класс вывода данных
      * @param dataManager класс обработки данных
      */
-    public Cycle(Input input, Output output, DataManager dataManager) {
+    public Cycle(Input input, Output output, DataManager dataManager, boolean isScilent) {
         localCommandManager = new CommandManager(this, dataManager);
         this.input = input;
         this.output = output;
         this.dataManager = dataManager;
+        this.isScilent = isScilent;
     }
 
     /**
@@ -61,7 +62,9 @@ public class Cycle {
      */
     public void cycle() {
         while (!needLeave) {
-            output.waiting();
+            if(!isScilent) {
+                output.waiting();
+            }
             String command = "";
             try {
                 command = input.getCommand();
@@ -75,12 +78,16 @@ public class Cycle {
 
             DataContainer localResponse = localCommandManager.executeCommand(commandData);
             if (localResponse != null) {
-                output.responseOut(localResponse);
+                if(!isScilent) {
+                    output.responseOut(localResponse);
+                }
                 continue;
             }
 
             if(!dataManager.send(commandData)) continue;
-            dataManager.processResponse();
+            if(!isScilent) {
+                dataManager.processResponse();
+            }
         }
     }
 

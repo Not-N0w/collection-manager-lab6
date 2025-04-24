@@ -1,10 +1,10 @@
-package com.labs.client;
+package com.labs.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.labs.client.gson.LocalDateAdapter;
-import com.labs.client.gson.LocalDateTimeAdapter;
+import com.labs.server.gson.LocalDateAdapter;
+import com.labs.server.gson.LocalDateTimeAdapter;
 import com.labs.common.core.Ticket;
 
 import java.io.File;

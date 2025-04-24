@@ -1,11 +1,7 @@
 package com.labs.client;
 
-import java.io.IOException;
-
 import com.labs.client.extra.Pair;
 import com.labs.common.DataContainer;
-import com.labs.common.dataConverter.Deserializer;
-import com.labs.common.dataConverter.Serializer;
 
 /**
  * Класс - обработчик данных. Организует отправку запросов и получение ответов с
@@ -45,7 +41,7 @@ public class DataManager {
         }
         DataContainer response = transmitter.send(commandData);
         output.responseOut(response);
-        if(response.get("error") != null) return false;
+        if(response.get("status").equals("error")) return false;
         return true;
     }
 

@@ -293,14 +293,15 @@ public class CommandDataParser {
                 break;
             case "execute_script":
                 String str = parseString();
-                if(str.charAt(0) == '-' && str.length() == 2) {
-                    if("s".contains(str.substring(1))) {
-                        result.add("param", str.substring(1));
-                        result.add("path", parseString());
-                        break;
+                var lexems = str.split(" ");
+                if(lexems.length == 2) {
+                    if(lexems[0].equals("-s")) {
+                        result.add("param", lexems[0].substring(1));
+                        result.add("path", lexems[1]);
                     }
+                    break;
                 }
-                result.add("path", str);
+                result.add("path", lexems[0]);
                 break;
             case "count_greater_than_refundable", "filter_greater_than_refundable":
                 result.add("refundable", parseRefundable());

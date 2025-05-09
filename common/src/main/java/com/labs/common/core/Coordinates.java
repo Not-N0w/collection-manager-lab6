@@ -7,7 +7,7 @@ import com.labs.client.ValueChecker;
 /**
  * Класс координат (из тз)
  */
-public class Coordinates implements Serializable, Settable {
+public class Coordinates implements Serializable, Settable,  Comparable<Coordinates> {
 
     /**
      * Нижний предел для X
@@ -94,6 +94,14 @@ public class Coordinates implements Serializable, Settable {
             default:
                 throw new IllegalArgumentException("Key " + fieldName + " not found.");
         }
+    }
+
+    @Override
+    public int compareTo(Coordinates other) {
+        int result = Integer.compare(this.x, other.x);
+        if (result != 0) return result;
+
+        return Float.compare(this.y, other.y);
     }
 
     @Override

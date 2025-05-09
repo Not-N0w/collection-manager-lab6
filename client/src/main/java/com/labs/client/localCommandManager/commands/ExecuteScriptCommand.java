@@ -37,10 +37,10 @@ public class ExecuteScriptCommand implements Command {
         Input input = new Input(cycle.output(), filePath);
         if (!input.checkScanner())
             return null;
-        boolean isScilent = false;
-        if(param != null && param.equals("s")) isScilent = true;
+        boolean isSilent = false;
+        if(param != null && param.equals("s")) isSilent = true;
 
-        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager(), isScilent);
+        Cycle fileCycle = new Cycle(input, cycle.output(), cycle.dataManager(), isSilent);
         fileCycle.output().noComments();
         fileCycle.input().noComments();
 

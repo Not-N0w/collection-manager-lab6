@@ -77,7 +77,9 @@ public class DataManager {
      * 
      * @see DataContainer
      */
-    public void processResponse() {
-        output.responseOut(getResponse());
+    public void processResponse(boolean isSilent) {
+        var response = getResponse();
+        if(isSilent) return;
+        output.responseOut(response);
     }
 }

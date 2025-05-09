@@ -7,7 +7,7 @@ import com.labs.client.ValueChecker;
 /**
  * Класс локации (из тз)
  */
-public class Location implements Serializable, Settable {
+public class Location implements Serializable, Settable, Comparable<Location> {
 
     private Float x; // Поле не может быть null
     private Float y; // Поле не может быть null
@@ -105,6 +105,17 @@ public class Location implements Serializable, Settable {
             default:
                 throw new IllegalArgumentException("Key " + fieldName + " not found.");
         }
+    }
+
+    @Override
+    public int compareTo(Location other) {
+        int result = this.x.compareTo(other.x);
+        if (result != 0) return result;
+
+        result = this.y.compareTo(other.y);
+        if (result != 0) return result;
+
+        return this.z.compareTo(other.z);
     }
 
     @Override

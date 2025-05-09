@@ -7,7 +7,7 @@ import com.labs.client.ValueChecker;
 /**
  * Класс персоны (из тз)
  */
-public class Person implements Serializable, Settable {
+public class Person implements Serializable, Settable,  Comparable<Person> {
 
     /**
      * Нижняя граница для weight
@@ -156,6 +156,20 @@ public class Person implements Serializable, Settable {
             default:
                 throw new IllegalArgumentException("Key " + fieldName + " not found.");
         }
+    }
+    @Override
+    public int compareTo(Person other) {
+        int result = this.birthday.compareTo(other.birthday);
+        if (result != 0) return result;
+
+        result = Double.compare(this.weight, other.weight);
+        if (result != 0) return result;
+
+        result = this.passportID.compareTo(other.passportID);
+        if (result != 0) return result;
+
+        result = this.location.compareTo(other.location);
+        return result;
     }
 
     @Override

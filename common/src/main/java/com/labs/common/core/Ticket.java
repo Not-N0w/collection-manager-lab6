@@ -257,19 +257,34 @@ public final class Ticket implements Serializable, Comparable<Ticket>, Settable 
 
     @Override
     public int compareTo(Ticket other) {
-        if (this.refundable.compareTo(other.refundable) == 0) {
-            if (this.price == other.price) {
-                return this.id.compareTo(other.id);
-            } else if (this.price < other.price) {
-                return -1;
-            } else {
-                return 1;
-            }
-        } else if (this.refundable.compareTo(other.refundable) < 0) {
+        int result = this.name.compareTo(other.name);
+        if (result != 0) return result;
+
+        result = this.coordinates.compareTo(other.coordinates);
+        if (result != 0) return result;
+
+        result = this.creationDate.compareTo(other.creationDate);
+        if (result != 0) return result;
+
+        result = Integer.compare(this.price, other.price);
+        if (result != 0) return result;
+
+        result = this.refundable.compareTo(other.refundable);
+        if (result != 0) return result;
+
+        result = this.type.compareTo(other.type);
+        if (result != 0) return result;
+
+        if (this.person != null && other.person != null) {
+            result = this.person.compareTo(other.person);
+            if (result != 0) return result;
+        } else if (this.person == null && other.person != null) {
             return -1;
-        } else {
+        } else if (this.person != null && other.person == null) {
             return 1;
         }
+
+        return 0;
     }
 
 }

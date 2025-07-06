@@ -4,7 +4,7 @@ Java client-server application (variant №9928) using TCP/NIO with serializatio
 
 ## Description
 
-This lab continues work from Lab 5, separating the application into two modules:
+This lab continues work from [Lab Work №5](https://github.com/Not-N0w/collection-manager-lab5), separating the application into two modules:
 - **Server** — stores and manages the collection, handles commands, and saves data.
 - **Client** — reads commands interactively, sends them to the server, and prints responses.
 
